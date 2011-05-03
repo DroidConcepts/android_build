@@ -431,12 +431,7 @@ def ReadFileList(ep, dir_list, timeout=0):
     if not output:
       Trace('Could not ls ' + d)
       return None
-    # This is a work-around for the ARMv7 emulation bug.
-    # XXX: Switch back to the commented-out line once the bug is fixed!!
-    for f in output.splitlines():
-      if not (f == 'Maps.apk' or f == 'SholesQuickOffice.apk'):
-        ret += ['%s/%s' % (d, f)]
-    # ret += ['%s/%s' % (d, f) for f in output.splitlines()]
+    ret += ['%s/%s' % (d, f) for f in output.splitlines()]
   return ret
 
 
@@ -684,10 +679,7 @@ def InstallCacheFiles(cache_system_dir, out_system_dir):
         if not os.path.exists(odex_file):
           if root.endswith('/system/app') or root.endswith('/system/framework'):
             Trace('jar/apk %s has no .odex file %s' % (jar_file, odex_file))
-            # This is a work-around for the ARMv7 emulation bug.
-            # XXX: Switch back to the commented-out line once the bug is fixed!!
-            continue
-            # return False
+            return False
           else:
             continue
 

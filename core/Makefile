@@ -206,7 +206,12 @@ APKCERTS_FILE := $(intermediates)/$(name).txt
 # but it should guarantee that the apkcerts file is rebuilt
 # if any packages change which certs they're signed with.
 all_built_packages := $(foreach p,$(PACKAGES),$(ALL_MODULES.$(p).BUILT))
+ifneq ($(TARGET_BUILD_APPS),)
+# We don't need to really build all the modules for apps_only build.
+$(APKCERTS_FILE):
+else
 $(APKCERTS_FILE): $(all_built_packages)
+endif
 	@echo APK certs list: $@
 	@mkdir -p $(dir $@)
 	@rm -f $@
@@ -219,6 +224,8 @@ $(APKCERTS_FILE): $(all_built_packages)
 
 .PHONY: apkcerts-list
 apkcerts-list: $(APKCERTS_FILE)
+
+$(call dist-for-goals, apps_only, $(APKCERTS_FILE):apkcerts.txt)
 
 # -----------------------------------------------------------------
 # module info file
@@ -802,8 +809,7 @@ endif
 # -----------------------------------------------------------------
 # host tools needed to build OTA packages
 
-.PHONY: otatools
-otatools: $(HOST_OUT_EXECUTABLES)/minigzip \
+OTATOOLS :=  $(HOST_OUT_EXECUTABLES)/minigzip \
 	  $(HOST_OUT_EXECUTABLES)/mkbootfs \
 	  $(HOST_OUT_EXECUTABLES)/mkbootimg \
 	  $(HOST_OUT_EXECUTABLES)/fs_config \
@@ -814,6 +820,9 @@ otatools: $(HOST_OUT_EXECUTABLES)/minigzip \
 	  $(HOST_OUT_EXECUTABLES)/imgdiff \
 	  $(HOST_OUT_JAVA_LIBRARIES)/dumpkey.jar \
 	  $(HOST_OUT_JAVA_LIBRARIES)/signapk.jar
+
+.PHONY: otatools
+otatools: $(OTATOOLS)
 
 # -----------------------------------------------------------------
 # A zip of the directories that map to the target filesystem.
@@ -966,7 +975,7 @@ else
 $(INTERNAL_OTA_PACKAGE_TARGET): scriptmode := $(TARGET_OTA_SCRIPT_MODE)
 endif
 
-$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) otatools
+$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(OTATOOLS)
 	@echo "Package OTA: $@"
 	$(hide) ./build/tools/releasetools/ota_from_target_files \
 	   -m $(scriptmode) \
@@ -1100,7 +1109,7 @@ else
 $(INTERNAL_UPDATE_PACKAGE_TARGET): extensions := $(TARGET_RELEASETOOLS_EXTENSIONS)
 endif
 
-$(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) otatools
+$(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(OTATOOLS)
 	@echo "Package: $@"
 	$(hide) ./build/tools/releasetools/img_from_target_files \
 	   -s $(extensions) \
