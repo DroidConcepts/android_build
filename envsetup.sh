@@ -546,9 +546,6 @@ function tapas()
     if [ -z "$variant" ]; then
         variant=eng
     fi
-    if [ -z "$apps" ]; then
-        apps=all
-    fi
 
     export TARGET_PRODUCT=generic
     export TARGET_BUILD_VARIANT=$variant
@@ -636,7 +633,7 @@ function mm()
         elif [ ! "$M" ]; then
             echo "Couldn't locate a makefile from the current directory."
         else
-            ONE_SHOT_MAKEFILE=$M make -C $T all_modules $@
+            ONE_SHOT_MAKEFILE=$M make -C $T files $@
         fi
     fi
 }
@@ -668,15 +665,13 @@ function mmm()
                     ARGS="$ARGS snod"
                 elif [ "$DIR" = showcommands ]; then
                     ARGS="$ARGS showcommands"
-                elif [ "$DIR" = dist ]; then
-                    ARGS="$ARGS dist"
                 else
                     echo "No Android.mk in $DIR."
                     return 1
                 fi
             fi
         done
-        ONE_SHOT_MAKEFILE="$MAKEFILE" make -C $T $DASH_ARGS all_modules $ARGS
+        ONE_SHOT_MAKEFILE="$MAKEFILE" make -C $T $DASH_ARGS files $ARGS
     else
         echo "Couldn't locate the top of the tree.  Try setting TOP."
     fi

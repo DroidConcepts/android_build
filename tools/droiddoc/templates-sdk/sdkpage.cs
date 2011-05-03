@@ -24,10 +24,10 @@
   <div id="jd-content">
     <p>Redirecting to 
     <a href="<?cs var:toroot ?>sdk/<?cs 
-      if:sdk.redirect.path ?><?cs var:sdk.redirect.path ?><?cs
-      else ?>index.html<?cs /if ?>"><?cs
-      if:sdk.redirect.path ?><?cs var:sdk.redirect.path ?><?cs
-      else ?>Download the SDK<?cs /if ?>
+      if:sdk.redirect.path ?><?cs var:sdk.redirect.path ?><?cs 
+      else ?><?cs var:sdk.current ?>/index.html<?cs /if ?>">sdk/<?cs 
+      if:sdk.redirect.path ?><?cs var:sdk.redirect.path ?><?cs 
+      else ?><?cs var:sdk.current ?>/index.html<?cs /if ?>
     </a> ...</p>
 <?cs else ?>
 <div class="g-unit" id="doc-content" >
@@ -151,7 +151,6 @@ computer. </p>
     </a>
   </div>
 ?>
-
   <p>Welcome Developers! If you are new to the Android SDK, please read the <a
 href="#quickstart">Quick Start</a>, below, for an overview of how to install and
 set up the SDK. </p>
@@ -170,8 +169,7 @@ to get the components, rather than downloading a new SDK package.</p>
   <tr>
     <td>Windows</td>
     <td>
-  <a onclick="onDownload(this)" href="http://dl.google.com/android/<?cs var:sdk.win_download
-?>"><?cs var:sdk.win_download ?></a>
+  <a href="<?cs var:toroot ?>sdk/download.html?v=<?cs var:sdk.win_download ?>"><?cs var:sdk.win_download ?></a>
     </td>
     <td><?cs var:sdk.win_bytes ?> bytes</td>
     <td><?cs var:sdk.win_checksum ?></td>
@@ -179,8 +177,7 @@ to get the components, rather than downloading a new SDK package.</p>
   <tr class="alt-color">
     <td>Mac OS X (intel)</td>
     <td>
-  <a onclick="onDownload(this)" href="http://dl.google.com/android/<?cs var:sdk.mac_download
-?>"><?cs var:sdk.mac_download ?></a>
+  <a href="<?cs var:toroot ?>sdk/download.html?v=<?cs var:sdk.mac_download ?>"><?cs var:sdk.mac_download ?></a>
     </td>
     <td><?cs var:sdk.mac_bytes ?> bytes</td>
     <td><?cs var:sdk.mac_checksum ?></td>
@@ -188,8 +185,7 @@ to get the components, rather than downloading a new SDK package.</p>
   <tr>
     <td>Linux (i386)</td>
     <td>
-  <a onclick="onDownload(this)" href="http://dl.google.com/android/<?cs var:sdk.linux_download
-?>"><?cs var:sdk.linux_download ?></a>
+  <a href="<?cs var:toroot ?>sdk/download.html?v=<?cs var:sdk.linux_download ?>"><?cs var:sdk.linux_download ?></a>
     </td>
     <td><?cs var:sdk.linux_bytes ?> bytes</td>
     <td><?cs var:sdk.linux_checksum ?></td>
@@ -205,19 +201,6 @@ to get the components, rather than downloading a new SDK package.</p>
   </tr>
   <?cs /if ?>
   </table>
-
-
-<div id="next-steps" style="display:none">
-  <p><b>Your download of <em><span id="filename"></span></em> has begun!</b></p>
-</div>
-
-<script type="text/javascript">
-function onDownload(link) {
-  $(link).parent().parent().children().css('background', '#fff');
-  $("#filename").text($(link).html());
-  $("#next-steps").show();
-}
-</script>
 
   <?cs /if ?>
  <?cs /if ?>
